@@ -52,7 +52,7 @@ html:not([data-lang="en"]) [lang="en"], html[data-lang="en"] [lang="fr"] { displ
 .wrap { max-width: 980px; margin: 0 auto; padding-block: 28px 64px; display: grid; gap: 72px; }
 a { color: var(--accent); text-underline-offset: 3px; }
 a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
-h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -0.01em; line-height: 1.15; }
 p { margin: 0; }
 .label { font: 500 0.75rem/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
 
@@ -99,8 +99,16 @@ section h2 { font-size: clamp(1.6rem, 3.4vw, 2.1rem); font-weight: 700; }
 
 /* project index */
 .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 22px; display: grid; grid-template-rows: auto auto 1fr auto; gap: 12px; transition: border-color .15s, transform .15s; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 22px; display: grid; align-content: start; grid-template-rows: auto auto auto 1fr auto; gap: 12px; transition: border-color .15s, transform .15s; }
 .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.card .shot { margin: -22px -22px 4px; border-bottom: 1px solid var(--line); border-radius: 12px 12px 0 0; overflow: hidden; background: var(--bg); }
+.card .shot img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; object-position: left top; }
+.card.wide { grid-column: 1 / -1; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); grid-template-rows: none; column-gap: 28px; padding: 0; overflow: hidden; }
+.card.wide .shot { margin: 0; border: 0; border-right: 1px solid var(--line); border-radius: 0; grid-row: 1 / span 4; }
+.card.wide .shot img { height: 100%; min-height: 240px; }
+.card.wide > :not(.shot) { padding-right: 26px; }
+.card.wide .top { padding-top: 26px; }
+.card.wide .links { padding-bottom: 26px; }
 .card .top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
 .card h3 { font-size: 1.25rem; font-weight: 700; }
 .card .kind { font: 400 0.72rem var(--mono); color: var(--muted); white-space: nowrap; text-align: right; }
@@ -120,11 +128,25 @@ section h2 { font-size: clamp(1.6rem, 3.4vw, 2.1rem); font-weight: 700; }
 .contact { display: grid; gap: 18px; padding-top: 36px; border-top: 1px solid var(--line); }
 .contact h2 { font-size: clamp(1.8rem, 4.6vw, 2.8rem); font-weight: 800; max-width: 20ch; }
 footer { font: 400 0.8rem var(--mono); color: var(--muted); }
+.more { margin-top: 18px; font: 500 0.9rem var(--mono); }
+.channels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.channel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; display: grid; gap: 6px; min-width: 0; text-decoration: none; color: var(--ink); }
+a.channel:hover { border-color: var(--accent); }
+.channel .v { font: 500 0.92rem var(--mono); overflow-wrap: anywhere; color: var(--ink); }
+.channel .row { display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.copy { font: 500 0.78rem var(--mono); background: none; border: 1px solid var(--line); color: var(--ink); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.copy:hover { border-color: var(--accent); }
 
 @media (max-width: 760px) {
   .hero { grid-template-columns: 1fr; gap: 28px; }
   .lab { max-width: 420px; }
   .grid { grid-template-columns: 1fr; }
+  .channels { grid-template-columns: 1fr; }
+  .card.wide { grid-template-columns: 1fr; padding: 0 22px 22px; row-gap: 12px; }
+  .card.wide .shot { margin: 0 -22px 4px; grid-row: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+  .card.wide > :not(.shot) { padding-right: 0; }
+  .card.wide .top { padding-top: 0; }
+  .card.wide .links { padding-bottom: 0; }
   .skills { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (prefers-reduced-motion: reduce) { .card { transition: none; } .card:hover { transform: none; } }
@@ -159,7 +181,8 @@ footer { font: 400 0.8rem var(--mono); color: var(--muted); }
     </div>
     <div class="cta">
       <a class="btn primary" href="#projets"><span lang="fr">Voir les projets</span><span lang="en">See projects</span></a>
-      <a class="btn" href="https://github.com/okings69">GitHub ↗</a>
+      <a class="btn" href="#contact">Contact</a>
+      <a class="btn" href="https://www.linkedin.com/in/orian-lebou-3b2014309/">LinkedIn ↗</a>
     </div>
    </div>
     <figure class="lab" style="margin:0">
@@ -183,17 +206,32 @@ footer { font: 400 0.8rem var(--mono); color: var(--muted); }
       <button type="button" id="f-data" data-filter="data"><span lang="fr">Data &amp; IA</span><span lang="en">Data &amp; AI</span></button>
     </div>
     <div class="grid">
+      <article class="card wide" data-cat="web">
+        <div class="shot"><img src="img/music-store.webp" alt="Capture de Music Store : tableau de chansons générées, choix de la langue et de la graine" loading="lazy" width="1200" height="675"></div>
+        <div class="top"><h3>Music Store</h3><span class="kind">full-stack<time datetime="2026-04"><span lang="fr">avr. 2026</span><span lang="en">Apr 2026</span></time></span></div>
+        <div class="tags"><span class="tag">ASP.NET Core</span><span class="tag">React + Vite</span><span class="tag">Faker</span><span class="tag">Render</span></div>
+        <p><span lang="fr">Catalogue musical généré de façon déterministe à partir d'une graine : pagination, vue galerie, pochettes et écoute d'extraits audio. Déployé en ligne.</span><span lang="en">Music catalogue generated deterministically from a seed: pagination, gallery view, cover art and audio previews. Deployed online.</span></p>
+        <div class="links"><a class="live" href="https://music-store-frontend-8jop.onrender.com/">demo ↗</a><a href="https://github.com/okings69/music-store-api">code ↗</a></div>
+      </article>
+      <article class="card" data-cat="data">
+        <div class="shot"><img src="img/k-means-3d.webp" alt="Capture de K-Means 3D : quatre clusters colorés dans une scène 3D" loading="lazy" width="1200" height="675"></div>
+        <div class="top"><h3>K-Means 3D</h3><span class="kind"><span lang="fr">visualisation</span><span lang="en">visualization</span><time datetime="2026-05"><span lang="fr">mai 2026</span><span lang="en">May 2026</span></time></span></div>
+        <div class="tags"><span class="tag">JavaScript</span><span class="tag">Three.js</span><span class="tag">Docker</span></div>
+        <p><span lang="fr">Clustering K-Means animé en 3D : choix de 2 à 6 clusters, itérations pas à pas, centres et inertie affichés.</span><span lang="en">Animated 3D K-Means clustering: pick 2 to 6 clusters, step through iterations, see centroids and inertia.</span></p>
+        <div class="links"><a href="https://github.com/okings69/K-Means-3D">code ↗</a></div>
+      </article>
+      <article class="card" data-cat="data">
+        <div class="shot"><img src="img/digit-counter.webp" alt="Grille d'échantillons de chiffres manuscrits" loading="lazy" width="1200" height="675"></div>
+        <div class="top"><h3>Digit Counter</h3><span class="kind">machine learning<time datetime="2026-04"><span lang="fr">avr. 2026</span><span lang="en">Apr 2026</span></time></span></div>
+        <div class="tags"><span class="tag">Python</span><span class="tag">NumPy</span><span class="tag">MNIST</span></div>
+        <p><span lang="fr">Compte les chiffres 0 à 9 dans un jeu d'images en niveaux de gris, avec de petits réseaux de neurones écrits en NumPy et un vote majoritaire pour stabiliser les prédictions.</span><span lang="en">Counts digits 0 to 9 across a set of grayscale images, using small neural networks written in NumPy and majority voting to stabilise predictions.</span></p>
+        <div class="links"><a href="https://github.com/okings69/digit-counter">code ↗</a></div>
+      </article>
       <article class="card" data-cat="web">
         <div class="top"><h3>Port Performance Analyzer</h3><span class="kind">full-stack<time datetime="2026-04"><span lang="fr">avr. 2026</span><span lang="en">Apr 2026</span></time></span></div>
         <div class="tags"><span class="tag">.NET 8</span><span class="tag">React + Vite</span><span class="tag">TypeScript</span><span class="tag">PostgreSQL</span><span class="tag">JWT</span></div>
         <p><span lang="fr">Plateforme de suivi et de comparaison des performances des ports maritimes et secs : indicateurs, scores pondérés, classements par période et tableaux de bord, avec rôles et architecture en couches.</span><span lang="en">Platform to monitor and compare the performance of sea and dry ports: indicators, weighted scores, rankings by period and dashboards, with role-based access and a layered architecture.</span></p>
         <div class="links"><a href="https://github.com/okings69/port_performance_analyzer">code ↗</a></div>
-      </article>
-      <article class="card" data-cat="web">
-        <div class="top"><h3>Music Store</h3><span class="kind">full-stack<time datetime="2026-04"><span lang="fr">avr. 2026</span><span lang="en">Apr 2026</span></time></span></div>
-        <div class="tags"><span class="tag">ASP.NET Core</span><span class="tag">React + Vite</span><span class="tag">Faker</span><span class="tag">Render</span></div>
-        <p><span lang="fr">Catalogue musical généré de façon déterministe à partir d'une graine : pagination, vue galerie, pochettes et écoute d'extraits audio. Déployé en ligne.</span><span lang="en">Music catalogue generated deterministically from a seed: pagination, gallery view, cover art and audio previews. Deployed online.</span></p>
-        <div class="links"><a class="live" href="https://music-store-frontend-8jop.onrender.com/">demo ↗</a><a href="https://github.com/okings69/music-store-api">code ↗</a></div>
       </article>
       <article class="card" data-cat="web rt">
         <div class="top"><h3>Collaborative Whiteboard</h3><span class="kind"><span lang="fr">temps réel</span><span lang="en">real-time</span><time datetime="2026-04"><span lang="fr">avr. 2026</span><span lang="en">Apr 2026</span></time></span></div>
@@ -213,25 +251,8 @@ footer { font: 400 0.8rem var(--mono); color: var(--muted); }
         <p><span lang="fr">API et interface Razor pour des calculs sécurisés avec historique par utilisateur : couches Domain / Application / Infrastructure, JWT, Swagger et tests unitaires.</span><span lang="en">API and Razor UI for secure calculations with per-user history: Domain / Application / Infrastructure layers, JWT, Swagger and unit tests.</span></p>
         <div class="links"><a href="https://github.com/okings69/P-Project">code ↗</a></div>
       </article>
-      <article class="card" data-cat="data">
-        <div class="top"><h3>K-Means 3D</h3><span class="kind"><span lang="fr">visualisation</span><span lang="en">visualization</span><time datetime="2026-05"><span lang="fr">mai 2026</span><span lang="en">May 2026</span></time></span></div>
-        <div class="tags"><span class="tag">JavaScript</span><span class="tag">Three.js</span><span class="tag">Docker</span></div>
-        <p><span lang="fr">Clustering K-Means animé en 3D : choix de 2 à 6 clusters, itérations pas à pas, centres et inertie affichés.</span><span lang="en">Animated 3D K-Means clustering: pick 2 to 6 clusters, step through iterations, see centroids and inertia.</span></p>
-        <div class="links"><a href="https://github.com/okings69/K-Means-3D">code ↗</a></div>
-      </article>
-      <article class="card" data-cat="data">
-        <div class="top"><h3>Digit Counter</h3><span class="kind">machine learning<time datetime="2026-04"><span lang="fr">avr. 2026</span><span lang="en">Apr 2026</span></time></span></div>
-        <div class="tags"><span class="tag">Python</span><span class="tag">NumPy</span><span class="tag">MNIST</span></div>
-        <p><span lang="fr">Compte les chiffres 0 à 9 dans un jeu d'images en niveaux de gris, avec de petits réseaux de neurones écrits en NumPy et un vote majoritaire pour stabiliser les prédictions.</span><span lang="en">Counts digits 0 to 9 across a set of grayscale images, using small neural networks written in NumPy and majority voting to stabilise predictions.</span></p>
-        <div class="links"><a href="https://github.com/okings69/digit-counter">code ↗</a></div>
-      </article>
-      <article class="card" data-cat="all">
-        <div class="top"><h3><span lang="fr">Et la suite</span><span lang="en">And more</span></h3><span class="kind">github</span></div>
-        <div class="tags"><span class="tag">C#</span><span class="tag">TypeScript</span><span class="tag">Python</span></div>
-        <p><span lang="fr">Gestion d'utilisateurs, APIs REST, sites vitrines et exercices d'algorithmique sont sur mon profil GitHub.</span><span lang="en">User management apps, REST APIs, websites and algorithm exercises live on my GitHub profile.</span></p>
-        <div class="links"><a href="https://github.com/okings69?tab=repositories">github ↗</a></div>
-      </article>
     </div>
+    <p class="more"><a href="https://github.com/okings69?tab=repositories"><span lang="fr">Tous mes dépôts sur GitHub ↗</span><span lang="en">All my repositories on GitHub ↗</span></a></p>
   </section>
 
   <section aria-labelledby="h-skills">
@@ -247,11 +268,23 @@ footer { font: 400 0.8rem var(--mono); color: var(--muted); }
     </div>
   </section>
 
-  <section class="contact" aria-labelledby="h-contact">
+  <section class="contact" id="contact" aria-labelledby="h-contact">
     <span class="label">Contact</span>
     <h2 id="h-contact"><span lang="fr">Un stage, un projet ou une collaboration ? Parlons-en.</span><span lang="en">An internship, a project or a collaboration? Let's talk.</span></h2>
-    <p class="note"><span lang="fr">Le plus simple est de m'écrire depuis GitHub.</span><span lang="en">The easiest way to reach me is through GitHub.</span></p>
-    <div class="cta"><a class="btn primary" href="https://github.com/okings69">github.com/okings69 ↗</a></div>
+    <div class="channels">
+      <div class="channel">
+        <span class="label">E-mail</span>
+        <div class="row"><a class="v" id="mail" href="mailto:oriangidolcalebou@gmail.com">oriangidolcalebou@gmail.com</a><button type="button" class="copy" id="copy-mail"><span lang="fr">Copier</span><span lang="en">Copy</span></button></div>
+      </div>
+      <a class="channel" href="https://www.linkedin.com/in/orian-lebou-3b2014309/">
+        <span class="label">LinkedIn</span>
+        <span class="v">in/orian-lebou ↗</span>
+      </a>
+      <a class="channel" href="https://github.com/okings69">
+        <span class="label">GitHub</span>
+        <span class="v">okings69 ↗</span>
+      </a>
+    </div>
     <footer>© 2026 Okings</footer>
   </section>
 </div>
@@ -269,6 +302,17 @@ footer { font: 400 0.8rem var(--mono); color: var(--muted); }
   }
   document.querySelectorAll('.toggle button').forEach(function (b) { b.addEventListener('click', function () { set(b.dataset.set); }); });
   set(lang);
+
+  // copy e-mail
+  var cbtn = document.getElementById('copy-mail');
+  cbtn.addEventListener('click', function () {
+    var addr = document.getElementById('mail').textContent, old = cbtn.innerHTML;
+    function done(ok) { cbtn.textContent = ok ? (root.dataset.lang === 'en' ? 'Copied' : 'Copié') : '⌘C'; setTimeout(function () { cbtn.innerHTML = old; }, 1600); }
+    try {
+      navigator.clipboard.writeText(addr).then(function () { done(true); }, function () { select(); done(false); });
+    } catch (e) { select(); done(false); }
+    function select() { var r = document.createRange(); r.selectNodeContents(document.getElementById('mail')); var sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); }
+  });
 
   // project filters
   var fbtns = document.querySelectorAll('.filters button');
